@@ -11,27 +11,27 @@ export const getUserId = (): string => {
   return id;
 };
 
-// --- Pastel Color Pool for Mantras ---
-const PASTEL_COLORS = [
-  '#FFE5E5', // Pastel Pink
-  '#FFE5CC', // Pastel Peach
-  '#FFF4CC', // Pastel Yellow
-  '#E5FFCC', // Pastel Lime
-  '#CCFFE5', // Pastel Mint
-  '#CCF5FF', // Pastel Cyan
-  '#CCE5FF', // Pastel Blue
-  '#E5CCFF', // Pastel Lavender
-  '#FFCCF5', // Pastel Magenta
-  '#FFD9E5', // Pastel Rose
-  '#E5D9FF', // Pastel Purple
-  '#D9FFE5', // Pastel Green
+// --- Deep Color Pool for Mantras ---
+const DEEP_COLORS = [
+  '#8B4513', // Saddle Brown
+  '#2F4F4F', // Dark Slate Gray
+  '#483D8B', // Dark Slate Blue
+  '#8B008B', // Dark Magenta
+  '#556B2F', // Dark Olive Green
+  '#8B0000', // Dark Red
+  '#191970', // Midnight Blue
+  '#4B0082', // Indigo
+  '#800000', // Maroon
+  '#2E8B57', // Sea Green
+  '#6B4226', // Dark Brown
+  '#1C4587', // Dark Blue
 ];
 
 const getAvailableColor = (existingMantras: Mantra[]): string => {
   const usedColors = new Set(existingMantras.map(m => m.color).filter(Boolean));
-  const availableColor = PASTEL_COLORS.find(color => !usedColors.has(color));
+  const availableColor = DEEP_COLORS.find(color => !usedColors.has(color));
   // If all colors are used, cycle through them again
-  return availableColor || PASTEL_COLORS[existingMantras.length % PASTEL_COLORS.length];
+  return availableColor || DEEP_COLORS[existingMantras.length % DEEP_COLORS.length];
 };
 
 // --- Local Storage Implementation ---
@@ -76,7 +76,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[0],
+      color: DEEP_COLORS[0],
     },
     {
       id: crypto.randomUUID(),
@@ -84,7 +84,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[1],
+      color: DEEP_COLORS[1],
     },
     {
       id: crypto.randomUUID(),
@@ -92,7 +92,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[2],
+      color: DEEP_COLORS[2],
     },
     {
       id: crypto.randomUUID(),
@@ -100,7 +100,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[3],
+      color: DEEP_COLORS[3],
     },
     {
       id: crypto.randomUUID(),
@@ -108,7 +108,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[4],
+      color: DEEP_COLORS[4],
     },
     {
       id: crypto.randomUUID(),
@@ -116,7 +116,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[5],
+      color: DEEP_COLORS[5],
     },
     {
       id: crypto.randomUUID(),
@@ -124,7 +124,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
-      color: PASTEL_COLORS[6],
+      color: DEEP_COLORS[6],
     }
   ];
 

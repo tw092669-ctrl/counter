@@ -8,6 +8,7 @@ import { UserModal } from './components/UserModal';
 import { EditMantraModal } from './components/EditMantraModal';
 import { DateSettingModal } from './components/DateSettingModal';
 import { SheetSettingsModal } from './components/SheetSettingsModal';
+import { DesktopShortcutModal } from './components/DesktopShortcutModal';
 import { Pin, Plus, History, Edit2, Settings, CalendarClock, Sparkles, Filter } from 'lucide-react';
 
 // --- Sub-component: Mantra Card ---
@@ -49,7 +50,10 @@ const MantraCard: React.FC<MantraCardProps> = ({
        {/* Left Info Section */}
        <div className="flex-1 pr-4 z-10">
          <div className="flex items-center gap-2 mb-1">
-           <h3 className={`text-lg font-bold line-clamp-1 ${mantra.isPinned ? 'text-amber-900' : 'text-stone-800'}`}>
+           <h3 
+             className="text-lg font-bold line-clamp-1"
+             style={{ color: mantra.color || (mantra.isPinned ? '#78350f' : '#1c1917') }}
+           >
              {mantra.name}
            </h3>
            <button 
@@ -120,6 +124,7 @@ const App: React.FC = () => {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isSheetModalOpen, setIsSheetModalOpen] = useState(false);
+  const [isShortcutModalOpen, setIsShortcutModalOpen] = useState(false);
   
   const [selectedMantra, setSelectedMantra] = useState<Mantra | null>(null); // For Adding Count
   const [editingMantra, setEditingMantra] = useState<Mantra | null>(null); // For Editing Settings
@@ -264,7 +269,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-stone-100 font-sans text-stone-800 pb-20">
-      <BuddhaHeader onOpenSettings={() => setIsSheetModalOpen(true)} />
+      <BuddhaHeader onOpenShortcut={() => setIsShortcutModalOpen(true)} />
 
       <div className="max-w-3xl mx-auto px-4 -mt-10 relative z-10">
         {/* Header / User Info */}
@@ -468,6 +473,12 @@ const App: React.FC = () => {
           currentUrl={sheetUrl}
           onClose={() => setIsSheetModalOpen(false)}
           onSave={handleSaveSheetUrl}
+        />
+      )}
+
+      {isShortcutModalOpen && (
+        <DesktopShortcutModal 
+          onClose={() => setIsShortcutModalOpen(false)}
         />
       )}
     </div>
