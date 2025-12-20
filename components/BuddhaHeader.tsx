@@ -70,7 +70,7 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenSettings }) =>
              onClick={randomize}
              className="mt-6 text-amber-300 text-sm hover:text-amber-100 transition-colors hover:scale-110 active:scale-95"
            >
-             🔄 更換法語
+             更換法語
            </button>
         </div>
       </div>
