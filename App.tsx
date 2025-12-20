@@ -204,6 +204,12 @@ const App: React.FC = () => {
     setEditingMantra(null);
   };
 
+  const handleResetMantra = (id: string) => {
+    const updated = StorageService.updateMantra(id, { totalCount: 0 });
+    setMantras(updated);
+    setEditingMantra(null);
+  };
+
   const handleSaveGlobalDateRange = (name: string | undefined, start: string | undefined, end: string | undefined) => {
     StorageService.setGlobalDateRange(name, start, end);
     setGlobalDateRange({ name, start, end });
@@ -446,6 +452,7 @@ const App: React.FC = () => {
           mantra={editingMantra} 
           onClose={() => setEditingMantra(null)} 
           onSave={handleUpdateMantra}
+          onReset={handleResetMantra}
         />
       )}
 

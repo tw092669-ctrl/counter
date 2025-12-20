@@ -96,6 +96,18 @@ const saveLocalData = (data: LocalData) => {
   localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(data));
 };
 
+// Helper function to format date as YYYY/MM/DD HH:mm (Taiwan timezone UTC+8)
+const formatTimestamp = (date: Date): string => {
+  // Convert to Taiwan timezone (UTC+8)
+  const taiwanTime = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const year = taiwanTime.getFullYear();
+  const month = String(taiwanTime.getMonth() + 1).padStart(2, '0');
+  const day = String(taiwanTime.getDate()).padStart(2, '0');
+  const hours = String(taiwanTime.getHours()).padStart(2, '0');
+  const minutes = String(taiwanTime.getMinutes()).padStart(2, '0');
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+};
+
 // --- Google Sheets Integration Logic ---
 
 const sendToGoogleSheets = async (payload: SyncPayload) => {
@@ -228,13 +240,12 @@ export const StorageService = {
       // Sync to Cloud
       sendToGoogleSheets({
         action: 'ADD_LOG',
-        userId: getUserId(),
         userName: StorageService.getUserName(),
         userGroup: StorageService.getUserGroup(),
         data: {
             mantraName: mantra.name,
             amount,
-            timestamp: log.timestamp
+            timestamp: formatTimestamp(new Date())
         }
       });
 

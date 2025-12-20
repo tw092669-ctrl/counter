@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Mantra } from '../types';
-import { X, Save, Target } from 'lucide-react';
+import { X, Save, Target, RotateCcw } from 'lucide-react';
 
 interface EditMantraModalProps {
   mantra: Mantra;
   onClose: () => void;
   onSave: (id: string, updates: Partial<Mantra>) => void;
+  onReset?: (id: string) => void;
 }
 
-export const EditMantraModal: React.FC<EditMantraModalProps> = ({ mantra, onClose, onSave }) => {
+export const EditMantraModal: React.FC<EditMantraModalProps> = ({ mantra, onClose, onSave, onReset }) => {
   const [name, setName] = useState(mantra.name);
   const [targetCount, setTargetCount] = useState<string>(mantra.targetCount ? mantra.targetCount.toString() : '');
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,8 +22,40 @@ export const EditMantraModal: React.FC<EditMantraModalProps> = ({ mantra, onClos
     });
   };
 
+  const handleReset = () => {
+    if (onReset) {
+      onReset(mantra.id);
+      onClose();
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+      {showResetConfirm && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-xs rounded-2xl shadow-2xl p-6 mx-4 animate-fade-in-up">
+            <h4 className="text-lg font-bold text-stone-800 mb-4">確認歸零</h4>
+            <p className="text-stone-600 text-sm mb-6">
+              確定要將「{mantra.name}」的計數歸零嗎？此操作無法復原。
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowResetConfirm(false)}
+                className="flex-1 py-3 bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold rounded-xl transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors"
+              >
+                確認歸零
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 relative animate-fade-in-up">
         <button onClick={onClose} className="absolute top-4 right-4 text-stone-400 hover:text-stone-600">
           <X size={24} />
@@ -60,7 +94,7 @@ export const EditMantraModal: React.FC<EditMantraModalProps> = ({ mantra, onClos
             </p>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 space-y-3">
             <button 
               type="submit" 
               className="w-full py-4 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg"
@@ -68,6 +102,17 @@ export const EditMantraModal: React.FC<EditMantraModalProps> = ({ mantra, onClos
               <Save size={18} />
               儲存設定
             </button>
+            
+            {onReset && (
+              <button 
+                type="button"
+                onClick={() => setShowResetConfirm(true)}
+                className="w-full py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg"
+              >
+                <RotateCcw size={18} />
+                歸零計數
+              </button>
+            )}
           </div>
         </form>
       </div>

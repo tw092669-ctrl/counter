@@ -29,7 +29,6 @@ export interface Quote {
 // For the Google Sheets Payload
 export interface SyncPayload {
   action: 'ADD_LOG' | 'SYNC_STATE';
-  userId: string;
   userName?: string;
   userGroup?: string;
   data: any;
