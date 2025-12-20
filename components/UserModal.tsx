@@ -53,7 +53,7 @@ export const UserModal: React.FC<UserModalProps> = ({ currentName, currentGroup,
 
           <div>
             <label className="block text-xs font-bold text-stone-500 uppercase mb-2 flex items-center gap-1">
-               <User size={12} /> 姓名/法名
+               <User size={12} /> 姓名
             </label>
             <input 
               type="text" 
