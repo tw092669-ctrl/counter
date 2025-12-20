@@ -50,10 +50,7 @@ const MantraCard: React.FC<MantraCardProps> = ({
        {/* Left Info Section */}
        <div className="flex-1 pr-4 z-10">
          <div className="flex items-center gap-2 mb-1">
-           <h3 
-             className="text-lg font-bold line-clamp-1"
-             style={{ color: mantra.color || (mantra.isPinned ? '#78350f' : '#1c1917') }}
-           >
+           <h3 className={`text-lg font-bold line-clamp-1 ${mantra.isPinned ? 'text-amber-900' : 'text-stone-800'}`}>
              {mantra.name}
            </h3>
            <button 
