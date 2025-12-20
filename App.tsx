@@ -52,7 +52,13 @@ const MantraCard: React.FC<MantraCardProps> = ({
            <h3 className={`text-lg font-bold line-clamp-1 ${mantra.isPinned ? 'text-amber-900' : 'text-stone-800'}`}>
              {mantra.name}
            </h3>
-           {mantra.isPinned && <Pin size={14} className="text-amber-500 fill-amber-500 flex-shrink-0" />}
+           <button 
+             onClick={() => onTogglePin(mantra.id)}
+             className={`p-1.5 rounded-full touch-manipulation flex-shrink-0 ${mantra.isPinned ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400 active:bg-stone-200'}`}
+             title={mantra.isPinned ? "取消置頂" : "置頂"}
+           >
+             <Pin size={16} className={mantra.isPinned ? 'fill-amber-600' : ''} />
+           </button>
          </div>
          <div className="flex items-baseline gap-2 flex-wrap">
            <span className={`text-2xl font-serif font-medium ${isPeriodActive ? 'text-amber-700' : 'text-stone-900'}`}>
@@ -78,13 +84,6 @@ const MantraCard: React.FC<MantraCardProps> = ({
 
        {/* Top Right Tools - Always visible on mobile, hover on desktop */}
        <div className="absolute top-2 right-2 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-20">
-           <button 
-             onClick={() => onTogglePin(mantra.id)}
-             className={`p-2 md:p-1.5 rounded-full touch-manipulation ${mantra.isPinned ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400 active:bg-stone-200'}`}
-             title={mantra.isPinned ? "取消置頂" : "置頂"}
-           >
-             <Pin size={16} className="md:w-3.5 md:h-3.5" />
-           </button>
            <button 
              onClick={() => onEdit(mantra)}
              className="p-2 md:p-1.5 bg-stone-100 active:bg-stone-200 text-stone-500 rounded-full touch-manipulation"
