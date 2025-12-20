@@ -76,21 +76,21 @@ const MantraCard: React.FC<MantraCardProps> = ({
          </div>
        </div>
 
-       {/* Top Right Tools (Hover visible) */}
-       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+       {/* Top Right Tools - Always visible on mobile, hover on desktop */}
+       <div className="absolute top-2 right-2 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-20">
            <button 
              onClick={() => onTogglePin(mantra.id)}
-             className={`p-1.5 rounded-full ${mantra.isPinned ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400 hover:text-stone-600'}`}
+             className={`p-2 md:p-1.5 rounded-full touch-manipulation ${mantra.isPinned ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400 active:bg-stone-200'}`}
              title={mantra.isPinned ? "取消置頂" : "置頂"}
            >
-             <Pin size={14} />
+             <Pin size={16} className="md:w-3.5 md:h-3.5" />
            </button>
            <button 
              onClick={() => onEdit(mantra)}
-             className="p-1.5 bg-stone-100 hover:bg-stone-200 text-stone-500 rounded-full"
+             className="p-2 md:p-1.5 bg-stone-100 active:bg-stone-200 text-stone-500 rounded-full touch-manipulation"
              title="編輯"
            >
-             <Edit2 size={14} />
+             <Edit2 size={16} className="md:w-3.5 md:h-3.5" />
            </button>
        </div>
 
