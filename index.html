@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZenMala - 念經計數</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
+      
+      body {
+        font-family: 'Noto Serif TC', serif;
+        background-color: #f5f5f4; /* stone-100 */
+      }
+
+      .font-calligraphy {
+        font-family: 'DFKai-SB', 'BiauKai', '標楷體', 'KaiTi', '楷体', serif;
+        font-weight: 700;
+      }
+      
+      /* Refined glow effect: Sharp shadow for definition + Soft amber aura */
+      .text-glow {
+        text-shadow: 
+          2px 2px 0 rgba(0, 0, 0, 0.7),      /* Hard offset shadow for sharpness */
+          0 0 10px rgba(255, 255, 255, 0.3), /* Subtle inner light */
+          0 0 20px rgba(251, 191, 36, 0.6),  /* Golden aura */
+          0 0 40px rgba(251, 191, 36, 0.3);  /* Wide atmospheric glow */
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
