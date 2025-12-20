@@ -420,10 +420,6 @@ const App: React.FC = () => {
             </form>
           )}
         </div>
-        
-        <div className="mt-12 text-center text-stone-400 text-xs">
-           <p>Zen Mala - 雲端念佛計數器</p>
-        </div>
       </div>
 
       {/* Modals */}
