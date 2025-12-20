@@ -54,11 +54,11 @@ export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onCl
     weblocLink.click();
     document.body.removeChild(weblocLink);
     window.URL.revokeObjectURL(weblocUrl);
-    setIconUrl('');
     
     // Clear and close
     setUrl('');
     setName('');
+    setIconUrl('');
     onClose();
   };
 
@@ -100,7 +100,12 @@ export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onCl
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              >
+              placeholder="https://example.com"
+              className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-stone-700 mb-2">
               圖標網址（選填）
             </label>
@@ -120,12 +125,7 @@ export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onCl
             <p className="font-medium mb-1">說明：</p>
             <ul className="list-disc list-inside space-y-1">
               <li>將會下載兩個檔案（Windows .url 和 macOS .webloc）</li>
-              <li>圖標設定僅對 Windows 有效，macOS 會自動使用網站 favicon
-
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-stone-700">
-            <p className="font-medium mb-1">說明：</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li>將會下載兩個檔案（Windows .url 和 macOS .webloc）</li>
+              <li>圖標設定僅對 Windows 有效，macOS 會自動使用網站 favicon</li>
               <li>將檔案移動到桌面即可使用</li>
               <li>點擊快捷方式會在瀏覽器中開啟該網址</li>
             </ul>
