@@ -10,12 +10,23 @@ interface BuddhaHeaderProps {
 export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenSettings }) => {
   const [currentImage, setCurrentImage] = useState<string>('');
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const randomize = () => {
-    const randomImg = BUDDHA_IMAGES[Math.floor(Math.random() * BUDDHA_IMAGES.length)];
-    const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-    setCurrentImage(randomImg);
-    setCurrentQuote(randomQuote);
+    setIsAnimating(true);
+    
+    // Fade out effect
+    setTimeout(() => {
+      const randomImg = BUDDHA_IMAGES[Math.floor(Math.random() * BUDDHA_IMAGES.length)];
+      const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      setCurrentImage(randomImg);
+      setCurrentQuote(randomQuote);
+      
+      // Fade in effect
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
   };
 
   useEffect(() => {
@@ -47,13 +58,17 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenSettings }) =>
       <div className="absolute inset-0 flex flex-col items-center justify-end p-4 pb-20 text-center">
         <div className="w-full max-w-5xl px-4">
            <p 
-             className={`font-calligraphy text-white ${fontSizeClass} leading-relaxed text-glow tracking-wide transition-all duration-300`}
+             className={`font-calligraphy text-white ${fontSizeClass} leading-relaxed text-glow tracking-wide transition-all duration-500 ${
+               isAnimating 
+                 ? 'opacity-0 scale-95 -translate-y-4' 
+                 : 'opacity-100 scale-100 translate-y-0'
+             }`}
            >
              {currentQuote?.text}
            </p>
            <button
              onClick={randomize}
-             className="mt-6 text-amber-300 text-sm hover:text-amber-100 transition-colors"
+             className="mt-6 text-amber-300 text-sm hover:text-amber-100 transition-colors hover:scale-110 active:scale-95"
            >
              🔄 更換法語
            </button>
