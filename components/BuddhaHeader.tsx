@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Quote } from '../types';
 import { BUDDHA_IMAGES, QUOTES } from '../constants';
-import { Link2 } from 'lucide-react';
 
-interface BuddhaHeaderProps {
-  onOpenShortcut: () => void;
-}
+interface BuddhaHeaderProps {}
 
-export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenShortcut }) => {
+export const BuddhaHeader: React.FC<BuddhaHeaderProps> = () => {
   const [currentImage, setCurrentImage] = useState<string>('');
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -74,14 +71,6 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenShortcut }) =>
            </button>
         </div>
       </div>
-
-      <button 
-        onClick={onOpenShortcut}
-        className="absolute top-4 right-4 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full transition-colors flex items-center gap-2 backdrop-blur-sm"
-        title="快速開啟網址"
-      >
-        <Link2 size={20} />
-      </button>
     </div>
   );
 };
