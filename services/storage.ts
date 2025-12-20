@@ -51,6 +51,20 @@ const getLocalData = (): LocalData => {
         parsed.globalDateRange = { end: (parsed as any).globalTargetDate };
         delete (parsed as any).globalTargetDate;
     }
+    
+    // Migration: Assign colors to mantras that don't have one
+    let needsSave = false;
+    parsed.mantras.forEach((mantra: Mantra, index: number) => {
+      if (!mantra.color) {
+        mantra.color = getAvailableColor(parsed.mantras.slice(0, index));
+        needsSave = true;
+      }
+    });
+    
+    if (needsSave) {
+      localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(parsed));
+    }
+    
     return parsed;
   }
   
