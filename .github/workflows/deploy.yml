@@ -39,6 +39,13 @@ jobs:
       - name: Add .nojekyll
         run: touch dist/.nojekyll
         
+      - name: Verify build output
+        run: |
+          echo "=== Listing dist directory ==="
+          ls -la dist/
+          echo "=== Content of dist/index.html ==="
+          head -20 dist/index.html
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
