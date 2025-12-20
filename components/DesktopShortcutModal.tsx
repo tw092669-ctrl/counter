@@ -58,7 +58,7 @@ export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onCl
     // Clear and close
     setUrl('');
     setName('');
-    setIconUrl('');
+    setIconUrl('https://i.meee.com.tw/bWzgb80.jpg');
     onClose();
   };
 
