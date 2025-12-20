@@ -78,7 +78,7 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenShortcut }) =>
       <button 
         onClick={onOpenShortcut}
         className="absolute top-4 right-4 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full transition-colors flex items-center gap-2 backdrop-blur-sm"
-        title="建立桌面快捷方式"
+        title="快速開啟網址"
       >
         <Link2 size={20} />
       </button>
