@@ -6,8 +6,13 @@ interface DesktopShortcutModalProps {
 }
 
 export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onClose }) => {
-  const [url, setUrl] = useState('');
-  const [name, setName] = useState('');
+  // Get current page URL with all parameters (including script and group)
+  const getCurrentFullUrl = () => {
+    return window.location.href;
+  };
+
+  const [url, setUrl] = useState(getCurrentFullUrl());
+  const [name, setName] = useState('法藏修法記數器');
 
   const handleOpenUrl = () => {
     if (!url.trim()) {
@@ -104,8 +109,9 @@ export const DesktopShortcutModal: React.FC<DesktopShortcutModalProps> = ({ onCl
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-stone-700">
             <p className="font-medium mb-1">如何加到主畫面：</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
-              <li><strong>iOS</strong>：在 Safari 點擊分享 → 加入主畫面</li>
-              <li><strong>Android</strong>：在選單中選擇「加到主畫面」</li>
+              <li><strong>iOS</strong>：在 Safari 點擊「開啟網址」後，點擊分享 → 加入主畫面</li>
+              <li><strong>Android</strong>：點擊「開啟網址」後，在選單中選擇「加到主畫面」</li>
+              <li className="text-amber-700">包含試算表設定，從桌面開啟可自動連結</li>
             </ul>
           </div>
 
