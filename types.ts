@@ -5,6 +5,7 @@ export interface Mantra {
   isPinned: boolean;
   createdAt: string;
   targetCount?: number;
+  color?: string; // Hex color code for display
   // targetDate moved to global setting
 }
 

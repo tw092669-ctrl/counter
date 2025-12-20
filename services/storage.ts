@@ -11,6 +11,29 @@ export const getUserId = (): string => {
   return id;
 };
 
+// --- Pastel Color Pool for Mantras ---
+const PASTEL_COLORS = [
+  '#FFE5E5', // Pastel Pink
+  '#FFE5CC', // Pastel Peach
+  '#FFF4CC', // Pastel Yellow
+  '#E5FFCC', // Pastel Lime
+  '#CCFFE5', // Pastel Mint
+  '#CCF5FF', // Pastel Cyan
+  '#CCE5FF', // Pastel Blue
+  '#E5CCFF', // Pastel Lavender
+  '#FFCCF5', // Pastel Magenta
+  '#FFD9E5', // Pastel Rose
+  '#E5D9FF', // Pastel Purple
+  '#D9FFE5', // Pastel Green
+];
+
+const getAvailableColor = (existingMantras: Mantra[]): string => {
+  const usedColors = new Set(existingMantras.map(m => m.color).filter(Boolean));
+  const availableColor = PASTEL_COLORS.find(color => !usedColors.has(color));
+  // If all colors are used, cycle through them again
+  return availableColor || PASTEL_COLORS[existingMantras.length % PASTEL_COLORS.length];
+};
+
 // --- Local Storage Implementation ---
 
 interface LocalData {
@@ -39,6 +62,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[0],
     },
     {
       id: crypto.randomUUID(),
@@ -46,6 +70,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[1],
     },
     {
       id: crypto.randomUUID(),
@@ -53,6 +78,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[2],
     },
     {
       id: crypto.randomUUID(),
@@ -60,6 +86,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[3],
     },
     {
       id: crypto.randomUUID(),
@@ -67,6 +94,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[4],
     },
     {
       id: crypto.randomUUID(),
@@ -74,6 +102,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[5],
     },
     {
       id: crypto.randomUUID(),
@@ -81,6 +110,7 @@ const getLocalData = (): LocalData => {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: PASTEL_COLORS[6],
     }
   ];
 
@@ -192,6 +222,7 @@ export const StorageService = {
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
+      color: getAvailableColor(data.mantras),
     };
     data.mantras.push(newMantra);
     saveLocalData(data);
@@ -246,7 +277,8 @@ export const StorageService = {
             mantraName: mantra.name,
             amount: `+${amount}`,
             totalCount: mantra.totalCount,
-            timestamp: formatTimestamp(new Date())
+            timestamp: formatTimestamp(new Date()),
+            color: mantra.color
         }
       });
 
@@ -274,7 +306,8 @@ export const StorageService = {
             mantraName: mantra.name,
             amount: previousCount > 0 ? `-${previousCount}` : '0',
             totalCount: 0,
-            timestamp: formatTimestamp(new Date())
+            timestamp: formatTimestamp(new Date()),
+            color: mantra.color
         }
       });
     }
