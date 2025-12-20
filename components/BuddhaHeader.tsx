@@ -26,10 +26,12 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenSettings }) =>
   const fontSizeClass = useMemo(() => {
     const text = currentQuote?.text || '';
     const len = text.length;
-    // Longer text gets smaller font (Reduced sizes slightly per user request)
-    if (len > 60) return 'text-lg md:text-2xl';
-    if (len > 30) return 'text-xl md:text-3xl';
-    return 'text-2xl md:text-4xl';
+    // More granular font size adjustments for better display
+    if (len > 100) return 'text-sm md:text-base lg:text-lg';
+    if (len > 70) return 'text-base md:text-lg lg:text-xl';
+    if (len > 50) return 'text-lg md:text-xl lg:text-2xl';
+    if (len > 30) return 'text-xl md:text-2xl lg:text-3xl';
+    return 'text-2xl md:text-3xl lg:text-4xl';
   }, [currentQuote]);
 
   return (
@@ -42,16 +44,19 @@ export const BuddhaHeader: React.FC<BuddhaHeaderProps> = ({ onOpenSettings }) =>
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/20 to-transparent" />
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end p-6 pb-24 text-center">
-        <div 
-          onClick={randomize}
-          className="p-8 max-w-4xl transform transition-all hover:scale-105 cursor-pointer"
-          title="點擊更換法語"
-        >
-           {/* Removed line-clamp to show full text. Added dynamic fontSizeClass. */}
-           <p className={`font-calligraphy text-white ${fontSizeClass} leading-relaxed text-glow tracking-wide transition-all duration-300`}>
+      <div className="absolute inset-0 flex flex-col items-center justify-end p-4 pb-20 text-center">
+        <div className="w-full max-w-5xl px-4">
+           <p 
+             className={`font-calligraphy text-white ${fontSizeClass} leading-relaxed text-glow tracking-wide transition-all duration-300`}
+           >
              {currentQuote?.text}
            </p>
+           <button
+             onClick={randomize}
+             className="mt-6 text-amber-300 text-sm hover:text-amber-100 transition-colors"
+           >
+             🔄 更換法語
+           </button>
         </div>
       </div>
 
