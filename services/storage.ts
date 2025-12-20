@@ -244,7 +244,7 @@ export const StorageService = {
         userGroup: StorageService.getUserGroup(),
         data: {
             mantraName: mantra.name,
-            amount,
+            amount: `+${amount}`,
             totalCount: mantra.totalCount,
             timestamp: formatTimestamp(new Date())
         }
@@ -253,5 +253,31 @@ export const StorageService = {
       return { updatedMantras: data.mantras, updatedLogs: data.logs };
     }
     return { updatedMantras: data.mantras, updatedLogs: data.logs };
+  },
+
+  resetMantra: (id: string): Mantra[] => {
+    const data = getLocalData();
+    const mantraIndex = data.mantras.findIndex(m => m.id === id);
+    
+    if (mantraIndex !== -1) {
+      const mantra = data.mantras[mantraIndex];
+      const previousCount = mantra.totalCount;
+      mantra.totalCount = 0;
+      saveLocalData(data);
+
+      // Sync reset to Google Sheets with negative value
+      sendToGoogleSheets({
+        action: 'ADD_LOG',
+        userName: StorageService.getUserName(),
+        userGroup: StorageService.getUserGroup(),
+        data: {
+            mantraName: mantra.name,
+            amount: previousCount > 0 ? `-${previousCount}` : '0',
+            totalCount: 0,
+            timestamp: formatTimestamp(new Date())
+        }
+      });
+    }
+    return data.mantras;
   }
 };

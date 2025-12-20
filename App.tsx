@@ -204,7 +204,7 @@ const App: React.FC = () => {
   };
 
   const handleResetMantra = (id: string) => {
-    const updated = StorageService.updateMantra(id, { totalCount: 0 });
+    const updated = StorageService.resetMantra(id);
     setMantras(updated);
     setEditingMantra(null);
   };
