@@ -245,6 +245,7 @@ export const StorageService = {
         data: {
             mantraName: mantra.name,
             amount,
+            totalCount: mantra.totalCount,
             timestamp: formatTimestamp(new Date())
         }
       });
