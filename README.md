@@ -108,18 +108,48 @@ git push
 ## Google Sheets 同步設定
 
 1. 開啟 Google 試算表
-2. 點選「擴充功能」→「Apps Script」
-3. 貼上以下程式碼：
+2. 建立四個分頁，名稱分別為：
+   - **第一組** (sheet1)
+   - **第二組** (sheet2)
+   - **第三組** (sheet3)
+   - **第四組** (sheet4)
+3. 點選「擴充功能」→「Apps Script」
+4. 貼上以下程式碼：
 
 ```javascript
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const payload = JSON.parse(e.postData.contents);
     
+    // 根據組別選擇對應的分頁
+    // 台南一組 -> 第一組
+    // 台南二組 -> 第二組
+    // 台南三組 -> 第三組
+    // 台南四組 -> 第四組
+    let sheetName = '第一組'; // 預設
+    const userGroup = payload.userGroup || '';
+    
+    if (userGroup.includes('一組')) {
+      sheetName = '第一組';
+    } else if (userGroup.includes('二組')) {
+      sheetName = '第二組';
+    } else if (userGroup.includes('三組')) {
+      sheetName = '第三組';
+    } else if (userGroup.includes('四組')) {
+      sheetName = '第四組';
+    }
+    
+    // 取得或建立對應的分頁
+    let sheet = spreadsheet.getSheetByName(sheetName);
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(sheetName);
+    }
+    
+    // 如果是新分頁或空分頁，加入標題列
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(['時間', '使用者名稱', '共修團體', '項目名稱', '變動值', '項目當前總數']);
-      sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontColor('#000000');
+      sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontColor('#000000').setBackground('#f3f4f6');
     }
     
     if (payload.action === 'ADD_LOG') {
@@ -136,8 +166,14 @@ function doPost(e) {
       const rowIndex = sheet.getLastRow();
       sheet.getRange(rowIndex, 1, 1, 6).setFontColor('#000000');
       
+      // 如果有顏色資訊，可以設定背景色（可選）
+      if (data.color) {
+        sheet.getRange(rowIndex, 4).setBackground(data.color).setFontColor('#ffffff');
+      }
+      
       return ContentService.createTextOutput(JSON.stringify({
-        status: 'success'
+        status: 'success',
+        sheet: sheetName
       })).setMimeType(ContentService.MimeType.JSON);
     }
   } catch (error) {
@@ -149,9 +185,19 @@ function doPost(e) {
 }
 ```
 
-4. 部署為網頁應用程式（執行身分：我，存取權限：任何人）
-5. 複製部署網址
-6. 在應用中點選設定，貼上網址
+5. 部署為網頁應用程式（執行身分：我，存取權限：任何人）
+6. 複製部署網址
+7. 在應用中點選設定，貼上網址
+
+### 分頁說明
+
+系統會根據使用者的組別自動將資料寫入對應的分頁：
+- **台南一組** → 第一組 (sheet1)
+- **台南二組** → 第二組 (sheet2)
+- **台南三組** → 第三組 (sheet3)
+- **台南四組** → 第四組 (sheet4)
+
+如果使用者未設定組別，資料將預設寫入「第一組」分頁。
 
 ### 共修團體使用方式
 

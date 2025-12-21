@@ -153,6 +153,12 @@ const formatTimestamp = (date: Date): string => {
 };
 
 // --- Google Sheets Integration Logic ---
+// The userGroup field in the payload will be used by the backend to determine
+// which sheet tab to write to:
+// "台南一組" -> Sheet1 (第一組)
+// "台南二組" -> Sheet2 (第二組)
+// "台南三組" -> Sheet3 (第三組)
+// "台南四組" -> Sheet4 (第四組)
 
 const sendToGoogleSheets = async (payload: SyncPayload) => {
   const scriptUrl = localStorage.getItem(SHEET_URL_KEY);
