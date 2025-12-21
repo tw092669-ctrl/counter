@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mantra } from '../types';
-import { PlusCircle, X } from 'lucide-react';
+import { PlusCircle, MinusCircle, X } from 'lucide-react';
 
 interface InputModalProps {
   mantra: Mantra;
@@ -16,6 +16,14 @@ export const InputModal: React.FC<InputModalProps> = ({ mantra, onClose, onConfi
     const val = parseInt(amount);
     if (!isNaN(val) && val > 0) {
       onConfirm(val);
+    }
+  };
+
+  const handleDecrease = (e: React.FormEvent) => {
+    e.preventDefault();
+    const val = parseInt(amount);
+    if (!isNaN(val) && val > 0) {
+      onConfirm(-val); // 扣除数值
     }
   };
 
@@ -63,14 +71,26 @@ export const InputModal: React.FC<InputModalProps> = ({ mantra, onClose, onConfi
              ))}
           </div>
 
-          <button 
-            type="submit" 
-            disabled={!amount || parseInt(amount) <= 0}
-            className="w-full py-4 bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-xl shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2 transition-transform active:scale-95"
-          >
-            <PlusCircle size={24} />
-            確認新增
-          </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              type="button"
+              onClick={handleDecrease}
+              disabled={!amount || parseInt(amount) <= 0}
+              className="py-4 bg-red-500 hover:bg-red-600 disabled:bg-stone-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-xl shadow-lg shadow-red-500/30 flex items-center justify-center gap-2 transition-transform active:scale-95"
+            >
+              <MinusCircle size={24} />
+              減少數量
+            </button>
+
+            <button 
+              type="submit" 
+              disabled={!amount || parseInt(amount) <= 0}
+              className="py-4 bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 disabled:cursor-not-allowed text-white text-lg font-bold rounded-xl shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2 transition-transform active:scale-95"
+            >
+              <PlusCircle size={24} />
+              確認新增
+            </button>
+          </div>
         </form>
       </div>
     </div>

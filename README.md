@@ -278,11 +278,6 @@ function formatRow(sheet, rowIndex, color) {
   rowRange.setHorizontalAlignment('center');
   rowRange.setVerticalAlignment('middle');
   
-  // 設定項目名稱的背景色
-  if (color) {
-    sheet.getRange(rowIndex, 4).setBackground(color).setFontColor('#ffffff');
-  }
-  
   // 自動調整列高
   sheet.setRowHeight(rowIndex, 25);
 }
