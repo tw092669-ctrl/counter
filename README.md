@@ -255,7 +255,6 @@ function initializeSheet(sheet) {
   const headerRange = sheet.getRange(1, 1, 1, 6);
   headerRange.setFontWeight('bold');
   headerRange.setFontColor('#000000');
-  headerRange.setBackground('#f3f4f6');
   headerRange.setHorizontalAlignment('center');
   
   // 凍結標題列
