@@ -12,7 +12,7 @@
 - 📌 **置頂功能**：將重點修法項目置頂顯示，方便優先記錄
 - 🔄 **歸零功能**：項目完成後可重置計數，自動記錄到試算表
 - 📖 **歷史紀錄**：查看完整的持咒歷史記錄
-- 👤 **個人資料**：設定修行者姓名與共修團體
+- 👤 **個人資料**：設定修行者姓名與小組
 - ☁️ **雲端同步**：支援 Google Sheets 同步，多人共修統計
 - 🎨 **隨機配色**：每個項目自動分配深色識別色，便於試算表統計
 - 💬 **勸世法語**：隨機顯示佛教法語，增添修行氛圍
@@ -108,11 +108,12 @@ git push
 ## Google Sheets 同步設定
 
 1. 開啟 Google 試算表
-2. 建立四個分頁，名稱分別為：
-   - **第一組** (sheet1)
-   - **第二組** (sheet2)
-   - **第三組** (sheet3)
-   - **第四組** (sheet4)
+2. 建立五個分頁，名稱分別為：
+   - **第一組** (sheet1) - 台南一組的精簡資料（去重後）
+   - **第二組** (sheet2) - 台南二組的精簡資料（去重後）
+   - **第三組** (sheet3) - 台南三組的精簡資料（去重後）
+   - **第四組** (sheet4) - 台南四組的精簡資料（去重後）
+   - **紀錄** (sheet5) - 所有組別的完整歷史記錄（不去重）
 3. 點選「擴充功能」→「Apps Script」
 4. 貼上以下程式碼：
 
@@ -122,66 +123,193 @@ function doPost(e) {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const payload = JSON.parse(e.postData.contents);
     
-    // 根據組別選擇對應的分頁
-    // 台南一組 -> 第一組
-    // 台南二組 -> 第二組
-    // 台南三組 -> 第三組
-    // 台南四組 -> 第四組
-    let sheetName = '第一組'; // 預設
-    const userGroup = payload.userGroup || '';
-    
-    if (userGroup.includes('一組')) {
-      sheetName = '第一組';
-    } else if (userGroup.includes('二組')) {
-      sheetName = '第二組';
-    } else if (userGroup.includes('三組')) {
-      sheetName = '第三組';
-    } else if (userGroup.includes('四組')) {
-      sheetName = '第四組';
-    }
-    
-    // 取得或建立對應的分頁
-    let sheet = spreadsheet.getSheetByName(sheetName);
-    if (!sheet) {
-      sheet = spreadsheet.insertSheet(sheetName);
-    }
-    
-    // 如果是新分頁或空分頁，加入標題列
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['時間', '使用者名稱', '共修團體', '項目名稱', '變動值', '項目當前總數']);
-      sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontColor('#000000').setBackground('#f3f4f6');
-    }
-    
     if (payload.action === 'ADD_LOG') {
       const data = payload.data;
-      sheet.appendRow([
-        data.timestamp,
-        payload.userName || '',
-        payload.userGroup || '',
-        data.mantraName,
-        data.amount,
-        data.totalCount
-      ]);
+      const userName = payload.userName || '';
+      const userGroup = payload.userGroup || '';
       
-      const rowIndex = sheet.getLastRow();
-      sheet.getRange(rowIndex, 1, 1, 6).setFontColor('#000000');
+      // 1. 先寫入 Sheet5「紀錄」分頁（完整歷史記錄）
+      writeToRecordSheet(spreadsheet, data, userName, userGroup);
       
-      // 如果有顏色資訊，可以設定背景色（可選）
-      if (data.color) {
-        sheet.getRange(rowIndex, 4).setBackground(data.color).setFontColor('#ffffff');
-      }
-      
-      return ContentService.createTextOutput(JSON.stringify({
-        status: 'success',
-        sheet: sheetName
-      })).setMimeType(ContentService.MimeType.JSON);
+      // 2. 再寫入對應的組別分頁（去重處理）
+      writeToGroupSheet(spreadsheet, data, userName, userGroup);
     }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
   } catch (error) {
+    Logger.log('Error: ' + error.toString());
     return ContentService.createTextOutput(JSON.stringify({
       status: 'error',
       message: error.toString()
     })).setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// 寫入 Sheet5「紀錄」分頁（完整歷史，不去重）
+function writeToRecordSheet(spreadsheet, data, userName, userGroup) {
+  let recordSheet = spreadsheet.getSheetByName('紀錄');
+  if (!recordSheet) {
+    recordSheet = spreadsheet.insertSheet('紀錄');
+  }
+  
+  // 初始化標題列
+  if (recordSheet.getLastRow() === 0) {
+    initializeSheet(recordSheet);
+  }
+  
+  // 直接追加記錄
+  recordSheet.appendRow([
+    data.timestamp,
+    userName,
+    userGroup,
+    data.mantraName,
+    data.amount,
+    data.totalCount
+  ]);
+  
+  const rowIndex = recordSheet.getLastRow();
+  formatRow(recordSheet, rowIndex, data.color);
+}
+
+// 寫入組別分頁（去重處理）
+function writeToGroupSheet(spreadsheet, data, userName, userGroup) {
+  // 根據組別選擇對應的分頁
+  let sheetName = '第一組'; // 預設
+  
+  if (userGroup.includes('一組')) {
+    sheetName = '第一組';
+  } else if (userGroup.includes('二組')) {
+    sheetName = '第二組';
+  } else if (userGroup.includes('三組')) {
+    sheetName = '第三組';
+  } else if (userGroup.includes('四組')) {
+    sheetName = '第四組';
+  }
+  
+  // 取得或建立對應的分頁
+  let sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(sheetName);
+  }
+  
+  // 初始化標題列
+  if (sheet.getLastRow() === 0) {
+    initializeSheet(sheet);
+  }
+  
+  // 去重邏輯：檢查是否存在相同的「項目名稱、姓名、組別」
+  const lastRow = sheet.getLastRow();
+  let existingRowIndex = -1;
+  
+  if (lastRow > 1) { // 有資料行（排除標題列）
+    const allData = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+    
+    // 從後往前搜尋（因為相同項目通常在下方）
+    for (let i = allData.length - 1; i >= 0; i--) {
+      const row = allData[i];
+      const rowUserName = row[1];      // B欄：使用者名稱
+      const rowUserGroup = row[2];     // C欄：小組
+      const rowMantraName = row[3];    // D欄：項目名稱
+      
+      if (rowUserName === userName && 
+          rowUserGroup === userGroup && 
+          rowMantraName === data.mantraName) {
+        existingRowIndex = i + 2; // +2 是因為陣列從0開始，且第1列是標題
+        break;
+      }
+    }
+  }
+  
+  if (existingRowIndex > 0) {
+    // 找到相同記錄，更新該列
+    sheet.getRange(existingRowIndex, 1, 1, 6).setValues([[
+      data.timestamp,
+      userName,
+      userGroup,
+      data.mantraName,
+      data.amount,
+      data.totalCount
+    ]]);
+    formatRow(sheet, existingRowIndex, data.color);
+  } else {
+    // 沒有找到，新增一筆
+    sheet.appendRow([
+      data.timestamp,
+      userName,
+      userGroup,
+      data.mantraName,
+      data.amount,
+      data.totalCount
+    ]);
+    const rowIndex = sheet.getLastRow();
+    formatRow(sheet, rowIndex, data.color);
+  }
+}
+
+// 初始化工作表（設定標題列）
+function initializeSheet(sheet) {
+  sheet.appendRow(['時間', '使用者名稱', '小組', '項目名稱', '變動值', '項目當前總數']);
+  const headerRange = sheet.getRange(1, 1, 1, 6);
+  headerRange.setFontWeight('bold');
+  headerRange.setFontColor('#000000');
+  headerRange.setBackground('#f3f4f6');
+  headerRange.setHorizontalAlignment('center');
+  
+  // 凍結標題列
+  sheet.setFrozenRows(1);
+  
+  // 設定欄位寬度
+  sheet.setColumnWidth(1, 150); // 時間
+  sheet.setColumnWidth(2, 100); // 使用者名稱
+  sheet.setColumnWidth(3, 100); // 小組
+  sheet.setColumnWidth(4, 200); // 項目名稱
+  sheet.setColumnWidth(5, 80);  // 變動值
+  sheet.setColumnWidth(6, 120); // 項目當前總數
+}
+
+// 格式化列樣式
+function formatRow(sheet, rowIndex, color) {
+  const rowRange = sheet.getRange(rowIndex, 1, 1, 6);
+  rowRange.setFontColor('#000000');
+  // 所有內容置中對齊
+  rowRange.setHorizontalAlignment('center');
+  rowRange.setVerticalAlignment('middle');
+  
+  // 設定項目名稱的背景色
+  if (color) {
+    sheet.getRange(rowIndex, 4).setBackground(color).setFontColor('#ffffff');
+  }
+  
+  // 自動調整列高
+  sheet.setRowHeight(rowIndex, 25);
+}
+
+// 測試函數（可選）
+function testDoPost() {
+  const testPayload = {
+    action: 'ADD_LOG',
+    userName: '測試用戶',
+    userGroup: '台南一組',
+    data: {
+      timestamp: '2025/12/21 14:30',
+      mantraName: '懷業祈禱文',
+      amount: '+108',
+      totalCount: 1080,
+      color: '#8B4513'
+    }
+  };
+  
+  const testEvent = {
+    postData: {
+      contents: JSON.stringify(testPayload)
+    }
+  };
+  
+  const result = doPost(testEvent);
+  Logger.log(result.getContent());
 }
 ```
 
@@ -191,15 +319,24 @@ function doPost(e) {
 
 ### 分頁說明
 
-系統會根據使用者的組別自動將資料寫入對應的分頁：
+系統會自動將資料寫入對應的分頁：
+
+#### 組別分頁（Sheet1-4）- 精簡顯示（去重）
 - **台南一組** → 第一組 (sheet1)
 - **台南二組** → 第二組 (sheet2)
 - **台南三組** → 第三組 (sheet3)
 - **台南四組** → 第四組 (sheet4)
 
-如果使用者未設定組別，資料將預設寫入「第一組」分頁。
+**去重邏輯**：當「項目名稱」、「姓名」、「組別」這三個欄位都相同時，只保留最新的一筆資料（覆蓋舊資料）。這樣可以讓各組別分頁保持精簡，快速查看每個人每個項目的最新狀態。
 
-### 共修團體使用方式
+#### 紀錄分頁（Sheet5）- 完整歷史
+- **紀錄** (sheet5) - 保存所有組別的完整歷史記錄
+
+**完整記錄**：所有的操作都會完整保存在此分頁，不進行任何去重處理。即使在組別分頁中被覆蓋的資料，在此分頁中仍然完整保留，避免因誤操作導致資料遺失。
+
+**預設行為**：如果使用者未設定組別，資料將預設寫入「第一組」分頁。
+
+### 小組使用方式
 
 建立包含試算表設定的連結：
 ```
