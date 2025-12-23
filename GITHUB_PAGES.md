@@ -24,7 +24,7 @@
 
 4. **訪問網站**
    - 部署完成後，網站將在以下位置可用：
-   - `https://tw092669-ctrl.github.io/fazang/`
+   - `https://tw092669-ctrl.github.io/counter/`
 
 ## 方法二：手動部署
 
@@ -67,7 +67,7 @@ npm run preview
 
 - 確保 GitHub 儲存庫設定中的 Pages 已啟用
 - 如果使用 GitHub Actions，不需要手動部署
-- 建置時會自動設定正確的 base path (`/fazang/`)
+- 建置時會自動設定正確的 base path (`/counter/`)
 - 所有資料儲存在本地瀏覽器，不需要後端伺服器
 
 ## 疑難排解

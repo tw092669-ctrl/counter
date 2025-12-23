@@ -1,4 +1,4 @@
-# 法藏 fazang 修法記數器專案打包清單
+# 法藏 counter 修法記數器專案打包清單
 
 ## ✅ 已完成項目
 
@@ -43,7 +43,7 @@
 2. 推送代碼到 `main` 分支
 3. GitHub Actions 會自動建置並部署
 
-**網址**: https://tw092669-ctrl.github.io/fazang/
+**網址**: https://tw092669-ctrl.github.io/counter/
 
 ### 手動部署
 ```bash
@@ -61,8 +61,8 @@ dist/assets/index-*.js          233.02 kB
 ```
 
 ✅ GitHub Pages 建置成功：`npm run build:gh-pages`
-- Base path 正確設定為 `/fazang/`
-- 資源路徑正確：`/fazang/assets/*`
+- Base path 正確設定為 `/counter/`
+- 資源路徑正確：`/counter/assets/*`
 
 ## 🎯 下一步
 
