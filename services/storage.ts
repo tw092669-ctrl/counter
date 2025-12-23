@@ -157,7 +157,42 @@ const saveLocalData = (data: LocalData) => {
 };
 
 // Helper function to format date as YYYY/MM/DD HH:mm (Taiwan timezone UTC+8)
+const formatTimestamp = (date: Date): string => {
+  // Convert to Taiwan timezone (UTC+8)
+  const taiwanTime = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const year = taiwanTime.getFullYear();
+  const month = String(taiwanTime.getMonth() + 1).padStart(2, '0');
+  const day = String(taiwanTime.getDate()).padStart(2, '0');
+  const hours = String(taiwanTime.getHours()).padStart(2, '0');
+  const minutes = String(taiwanTime.getMinutes()).padStart(2, '0');
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+};
 
+// --- Google Sheets Integration Logic ---
+const sendToGoogleSheets = async (payload: SyncPayload) => {
+  const scriptUrl = localStorage.getItem(SHEET_URL_KEY);
+  
+  if (!scriptUrl) {
+    console.log('Google Sheets URL not set. running in local mode.', payload);
+    return;
+  }
+
+  try {
+    // We use 'no-cors' for simplicity with simple GET/POST forms, 
+    // but typically fetch with POST JSON is better handled by a proxy or correct CORS headers in GAS.
+    // For GAS, often using text/plain ensures no CORS preflight issues.
+    await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors', 
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Failed to sync with Google Sheets", error);
+  }
+};
 
 // --- Service Methods ---
 
