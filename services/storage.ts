@@ -72,7 +72,7 @@ const getLocalData = (): LocalData => {
   const defaultMantras: Mantra[] = [
     {
       id: crypto.randomUUID(),
-      name: "懷業祈禱文",
+      name: "二臂黑袍大黑天祈請簡修儀軌",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -80,7 +80,7 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "馬頭明王心咒",
+      name: "淨土大護法",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -88,7 +88,7 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "二十一聖救度母禮讚文",
+      name: "懷業祈禱文(台南永久道場)",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -96,7 +96,7 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "作明佛母心咒",
+      name: "馬頭明王心咒",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -104,7 +104,7 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "三本尊除障法",
+      name: "二十一聖救度母禮讚文",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -112,7 +112,7 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "都傑派 紅馬頭明王實修法",
+      name: "作明佛母心咒",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
@@ -120,11 +120,27 @@ const getLocalData = (): LocalData => {
     },
     {
       id: crypto.randomUUID(),
-      name: "大白傘蓋佛母忿怒金剛遣魔擁護咒",
+      name: "三本尊除障法",
       totalCount: 0,
       isPinned: false,
       createdAt: new Date().toISOString(),
       color: DEEP_COLORS[6],
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "都傑派 紅馬頭明王實修法",
+      totalCount: 0,
+      isPinned: false,
+      createdAt: new Date().toISOString(),
+      color: DEEP_COLORS[7],
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "大白傘蓋佛母忿怒金剛遣魔擁護咒",
+      totalCount: 0,
+      isPinned: false,
+      createdAt: new Date().toISOString(),
+      color: DEEP_COLORS[8],
     }
   ];
 
