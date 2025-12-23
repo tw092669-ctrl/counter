@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-import { User, X, Users } from 'lucide-react';
-import { USER_GROUPS } from '../constants';
+import { User, X } from 'lucide-react';
 
 interface UserModalProps {
   currentName: string;
-  currentGroup: string;
   onClose: () => void;
-  onSave: (name: string, group: string) => void;
+  onSave: (name: string) => void;
 }
 
-export const UserModal: React.FC<UserModalProps> = ({ currentName, currentGroup, onClose, onSave }) => {
+export const UserModal: React.FC<UserModalProps> = ({ currentName, onClose, onSave }) => {
   const [name, setName] = useState(currentName);
-  const [group, setGroup] = useState(currentGroup);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onSave(name.trim(), group);
+      onSave(name.trim());
     }
   };
 
@@ -29,28 +26,11 @@ export const UserModal: React.FC<UserModalProps> = ({ currentName, currentGroup,
 
         <h3 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
           <User className="text-amber-500" />
-          設定法名 / 組別
+          設定法名
         </h3>
-        <p className="text-stone-500 text-sm mb-6">請輸入您的稱呼與組別，以便統計。</p>
+        <p className="text-stone-500 text-sm mb-6">請輸入您的稱呼，以便統計。</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          <div>
-            <label className="block text-xs font-bold text-stone-500 uppercase mb-2 flex items-center gap-1">
-               <Users size={12} /> 組別
-            </label>
-            <select
-              value={group}
-              onChange={(e) => setGroup(e.target.value)}
-              className="w-full p-3 rounded-lg border-2 border-stone-200 focus:border-amber-500 focus:outline-none text-base bg-white"
-            >
-              <option value="">請選擇組別</option>
-              {USER_GROUPS.map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </select>
-          </div>
-
           <div>
             <label className="block text-xs font-bold text-stone-500 uppercase mb-2 flex items-center gap-1">
                <User size={12} /> 姓名

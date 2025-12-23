@@ -10,15 +10,7 @@ export const DEFAULT_SCRIPT_URL = "";
 export const APP_STORAGE_KEY = 'zen_mala_data';
 export const USER_ID_KEY = 'zen_mala_user_id';
 export const USER_NAME_KEY = 'zen_mala_user_name';
-export const USER_GROUP_KEY = 'zen_mala_user_group';
 export const SHEET_URL_KEY = 'zen_mala_sheet_url';
-
-export const USER_GROUPS = [
-  "台南一組",
-  "台南二組",
-  "台南三組",
-  "台南四組"
-];
 
 export const BUDDHA_IMAGES = [
   "https://lh3.googleusercontent.com/pw/AP1GczMeQlCQUMspA7it8glT3FjlAnJY9tWVJUE8xRc8J-_cjOOtG0xm3_ombNpWIMCCu3Z8D9q_knzo1fI5nJsZ9oqBS113R3ifhr6QE6oc7KpapeA63jw=w1920-h1080",

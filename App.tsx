@@ -8,7 +8,7 @@ import { UserModal } from './components/UserModal';
 import { EditMantraModal } from './components/EditMantraModal';
 import { DateSettingModal } from './components/DateSettingModal';
 import { SheetSettingsModal } from './components/SheetSettingsModal';
-import { Pin, Plus, History, Edit2, Settings, CalendarClock, Sparkles, Filter } from 'lucide-react';
+import { Pin, Plus, History, Edit2, Settings, CalendarClock, Sparkles, Filter, Link2 } from 'lucide-react';
 
 // --- Sub-component: Mantra Card ---
 interface MantraCardProps {
@@ -111,7 +111,6 @@ const App: React.FC = () => {
   const [mantras, setMantras] = useState<Mantra[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [userName, setUserName] = useState<string>('善信');
-  const [userGroup, setUserGroup] = useState<string>('');
   const [globalDateRange, setGlobalDateRange] = useState<{name?: string, start?: string, end?: string}>({});
   const [sheetUrl, setSheetUrl] = useState<string>('');
   
@@ -128,41 +127,12 @@ const App: React.FC = () => {
 
   // Load initial data and handle URL parameters for auto-configuration
   useEffect(() => {
-    // 1. Load Local Data
+    // Load Local Data
     setMantras(StorageService.getMantras());
     setLogs(StorageService.getLogs());
     setUserName(StorageService.getUserName());
-    const savedGroup = StorageService.getUserGroup();
-    setUserGroup(savedGroup);
     setGlobalDateRange(StorageService.getGlobalDateRange());
     setSheetUrl(StorageService.getGoogleSheetUrl());
-
-    // 2. Check URL Parameters (Magic Link Logic)
-    // Allows sending a link like: https://app-url.com/?script=URL&group=GroupA
-    const params = new URLSearchParams(window.location.search);
-    const scriptParam = params.get('script');
-    const groupParam = params.get('group');
-    
-    let configChanged = false;
-
-    if (scriptParam) {
-      StorageService.setGoogleSheetUrl(scriptParam);
-      setSheetUrl(scriptParam);
-      configChanged = true;
-    }
-
-    if (groupParam) {
-      StorageService.setUserGroup(groupParam);
-      setUserGroup(groupParam);
-      configChanged = true;
-    }
-
-    // Clean URL if we processed parameters (Remove query string to keep URL clean)
-    if (configChanged) {
-      const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-      window.history.replaceState({ path: newUrl }, '', newUrl);
-    }
-
   }, []);
 
   // Handlers
@@ -189,11 +159,9 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSaveUser = (name: string, group: string) => {
+  const handleSaveUser = (name: string) => {
     StorageService.setUserName(name);
-    StorageService.setUserGroup(group);
     setUserName(name);
-    setUserGroup(group);
     setIsUserModalOpen(false);
   };
 
@@ -277,17 +245,19 @@ const App: React.FC = () => {
               {sheetUrl ? '已連線' : '單機版'}
             </div>
             <div className="flex items-baseline gap-1 truncate">
-              {userGroup && (
-                <span className="text-xs text-amber-800 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
-                  {userGroup}
-                </span>
-              )}
               <span className="font-bold text-stone-700">{userName}</span>
             </div>
             <Settings size={14} className="text-stone-400 flex-shrink-0 ml-1" />
           </div>
 
           <div className="flex gap-2">
+             <button 
+               onClick={() => setIsSheetModalOpen(true)}
+               className={`p-3 bg-white hover:bg-stone-50 text-stone-600 rounded-full shadow-sm transition-all ${sheetUrl ? 'ring-2 ring-amber-400 text-amber-600' : ''}`}
+               title="試算表設定"
+             >
+               <Link2 size={20} />
+             </button>
              <button 
                onClick={() => setIsDateModalOpen(true)}
                className={`p-3 bg-white hover:bg-stone-50 text-stone-600 rounded-full shadow-sm transition-all ${isPeriodActive ? 'ring-2 ring-amber-400 text-amber-600' : ''}`}
@@ -436,7 +406,6 @@ const App: React.FC = () => {
       {isUserModalOpen && (
         <UserModal 
           currentName={userName} 
-          currentGroup={userGroup}
           onClose={() => setIsUserModalOpen(false)} 
           onSave={handleSaveUser}
         />

@@ -31,6 +31,5 @@ export interface Quote {
 export interface SyncPayload {
   action: 'ADD_LOG' | 'SYNC_STATE';
   userName?: string;
-  userGroup?: string;
   data: any;
 }

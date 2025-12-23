@@ -1,5 +1,5 @@
 import { Mantra, LogEntry, SyncPayload } from '../types';
-import { APP_STORAGE_KEY, USER_ID_KEY, USER_NAME_KEY, USER_GROUP_KEY, SHEET_URL_KEY } from '../constants';
+import { APP_STORAGE_KEY, USER_ID_KEY, USER_NAME_KEY, SHEET_URL_KEY } from '../constants';
 
 // --- Helper: Generate or Get User ID ---
 export const getUserId = (): string => {
@@ -141,50 +141,7 @@ const saveLocalData = (data: LocalData) => {
 };
 
 // Helper function to format date as YYYY/MM/DD HH:mm (Taiwan timezone UTC+8)
-const formatTimestamp = (date: Date): string => {
-  // Convert to Taiwan timezone (UTC+8)
-  const taiwanTime = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-  const year = taiwanTime.getFullYear();
-  const month = String(taiwanTime.getMonth() + 1).padStart(2, '0');
-  const day = String(taiwanTime.getDate()).padStart(2, '0');
-  const hours = String(taiwanTime.getHours()).padStart(2, '0');
-  const minutes = String(taiwanTime.getMinutes()).padStart(2, '0');
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
 
-// --- Google Sheets Integration Logic ---
-// The userGroup field in the payload will be used by the backend to determine
-// which sheet tab to write to:
-// "台南一組" -> Sheet1 (第一組) - 顯示該組去重後的資料（相同項目名稱、姓名、組別時只保留最新一筆）
-// "台南二組" -> Sheet2 (第二組) - 顯示該組去重後的資料
-// "台南三組" -> Sheet3 (第三組) - 顯示該組去重後的資料
-// "台南四組" -> Sheet4 (第四組) - 顯示該組去重後的資料
-// Sheet5 (紀錄) - 保存所有組別的完整歷史記錄，不進行去重
-
-const sendToGoogleSheets = async (payload: SyncPayload) => {
-  const scriptUrl = localStorage.getItem(SHEET_URL_KEY);
-  
-  if (!scriptUrl) {
-    console.log('Google Sheets URL not set. running in local mode.', payload);
-    return;
-  }
-
-  try {
-    // We use 'no-cors' for simplicity with simple GET/POST forms, 
-    // but typically fetch with POST JSON is better handled by a proxy or correct CORS headers in GAS.
-    // For GAS, often using text/plain ensures no CORS preflight issues.
-    await fetch(scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors', 
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: JSON.stringify(payload),
-    });
-  } catch (error) {
-    console.error("Failed to sync with Google Sheets", error);
-  }
-};
 
 // --- Service Methods ---
 
@@ -203,14 +160,6 @@ export const StorageService = {
 
   setUserName: (name: string) => {
     localStorage.setItem(USER_NAME_KEY, name);
-  },
-
-  getUserGroup: (): string => {
-    return localStorage.getItem(USER_GROUP_KEY) || '';
-  },
-
-  setUserGroup: (group: string) => {
-    localStorage.setItem(USER_GROUP_KEY, group);
   },
 
   getGoogleSheetUrl: (): string => {
@@ -293,7 +242,6 @@ export const StorageService = {
       sendToGoogleSheets({
         action: 'ADD_LOG',
         userName: StorageService.getUserName(),
-        userGroup: StorageService.getUserGroup(),
         data: {
             mantraName: mantra.name,
             amount: `+${amount}`,
@@ -322,7 +270,6 @@ export const StorageService = {
       sendToGoogleSheets({
         action: 'ADD_LOG',
         userName: StorageService.getUserName(),
-        userGroup: StorageService.getUserGroup(),
         data: {
             mantraName: mantra.name,
             amount: previousCount > 0 ? `-${previousCount}` : '0',

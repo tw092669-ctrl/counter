@@ -1,5 +1,5 @@
 
-# 法藏 fazang 修法記數器
+# 修法記數器
 
 一個簡潔優雅的佛教持咒計數應用，幫助您追蹤和管理每日修行進度。
 
@@ -64,7 +64,7 @@ npm run preview
 ## 專案結構
 
 ```
-fazang/
+counter/
 ├── components/          # React 元件
 │   ├── BuddhaHeader.tsx         # 頂部背景與法語顯示
 │   ├── DateSettingModal.tsx     # 期間設定視窗
