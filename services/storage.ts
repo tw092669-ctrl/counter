@@ -61,6 +61,35 @@ const getLocalData = (): LocalData => {
       }
     });
     
+    // Migration: Add new default mantras if they don't exist
+    const requiredMantras = [
+      "二臂黑袍大黑天祈請簡修儀軌",
+      "淨土大護法",
+      "懷業祈禱文(台南永久道場)",
+      "馬頭明王心咒",
+      "二十一聖救度母禮讚文",
+      "作明佛母心咒",
+      "三本尊除障法",
+      "都傑派 紅馬頭明王實修法",
+      "大白傘蓋佛母忿怒金剛遣魔擁護咒"
+    ];
+    
+    const existingNames = new Set(parsed.mantras.map((m: Mantra) => m.name));
+    
+    requiredMantras.forEach((name, index) => {
+      if (!existingNames.has(name)) {
+        parsed.mantras.push({
+          id: crypto.randomUUID(),
+          name: name,
+          totalCount: 0,
+          isPinned: false,
+          createdAt: new Date().toISOString(),
+          color: getAvailableColor(parsed.mantras),
+        });
+        needsSave = true;
+      }
+    });
+    
     if (needsSave) {
       localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(parsed));
     }
