@@ -77,7 +77,8 @@ const getLocalData = (): LocalData => {
       "三本尊除障法",
       "都傑派 紅馬頭明王實修法",
       "大白傘蓋佛母忿怒金剛遣魔擁護咒",
-      "彌陀心咒"
+      "彌陀心咒",
+      "百字明咒"
     ];
     
     const existingNames = new Set(parsed.mantras.map((m: Mantra) => m.name));
@@ -184,6 +185,14 @@ const getLocalData = (): LocalData => {
       isPinned: false,
       createdAt: new Date().toISOString(),
       color: DEEP_COLORS[9],
+    },
+    {
+      id: crypto.randomUUID(),
+      name: "百字明咒",
+      totalCount: 0,
+      isPinned: false,
+      createdAt: new Date().toISOString(),
+      color: DEEP_COLORS[10],
     }
   ];
 
