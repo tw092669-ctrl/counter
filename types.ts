@@ -4,6 +4,7 @@ export interface Mantra {
   totalCount: number;
   isPinned: boolean;
   createdAt: string;
+  pinnedAt?: string; // ISO timestamp when pinned
   targetCount?: number;
   color?: string; // Hex color code for display
   // targetDate moved to global setting

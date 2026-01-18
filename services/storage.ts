@@ -59,6 +59,11 @@ const getLocalData = (): LocalData => {
         mantra.color = getAvailableColor(parsed.mantras.slice(0, index));
         needsSave = true;
       }
+      // Migration: Add pinnedAt timestamp for already pinned mantras
+      if (mantra.isPinned && !mantra.pinnedAt) {
+        mantra.pinnedAt = mantra.createdAt; // 使用創建時間作為預設釘選時間
+        needsSave = true;
+      }
     });
     
     // Migration: Add new default mantras if they don't exist
@@ -303,6 +308,10 @@ export const StorageService = {
     const index = data.mantras.findIndex(m => m.id === id);
     if (index !== -1) {
       data.mantras[index].isPinned = !data.mantras[index].isPinned;
+      // 記錄釘選時間，或清除取消釘選時的時間
+      data.mantras[index].pinnedAt = data.mantras[index].isPinned 
+        ? new Date().toISOString() 
+        : undefined;
       saveLocalData(data);
     }
     return data.mantras;

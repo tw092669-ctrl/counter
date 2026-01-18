@@ -219,9 +219,16 @@ const App: React.FC = () => {
 
   const isPeriodActive = !!(globalDateRange.start || globalDateRange.end || globalDateRange.name);
 
-  // Sorting: Pinned first, then Created Date
+  // Sorting: Pinned first (by pinnedAt time, newest first), then Created Date
   const pinnedMantras = useMemo(() => {
-    return mantras.filter(m => m.isPinned);
+    return mantras
+      .filter(m => m.isPinned)
+      .sort((a, b) => {
+        // 按釘選時間排序，最新釘選的在最上面
+        const timeA = a.pinnedAt ? new Date(a.pinnedAt).getTime() : 0;
+        const timeB = b.pinnedAt ? new Date(b.pinnedAt).getTime() : 0;
+        return timeB - timeA; // 降序：新的在前
+      });
   }, [mantras]);
 
   const otherMantras = useMemo(() => {
