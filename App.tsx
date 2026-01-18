@@ -400,6 +400,7 @@ const App: React.FC = () => {
           mantra={selectedMantra} 
           onClose={() => setSelectedMantra(null)} 
           onConfirm={handleAddCount}
+          onReset={handleResetMantra}
         />
       )}
 
